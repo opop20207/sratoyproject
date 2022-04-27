@@ -1,0 +1,28 @@
+.inputfile {
+	width: 100px;
+	height: 100px;
+	opacity: 10;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    font-size: 50px;
+    font-weight: 700;
+    color: white;
+    background-color: rgb(62, 120, 255);
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: rgb(190, 190, 190);
+}
+.inputfile + label {
+	cursor: pointer; /* "hand" cursor */
+}
+.inputfile:focus + label {
+	outline: 1px dotted #000;
+	outline: -webkit-focus-ring-color auto 5px;
+}
