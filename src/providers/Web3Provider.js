@@ -7,7 +7,7 @@ const defaultWeb3State = {
     networkId: null,
 };
 
-const web3Reducer = (state, action) => {
+const Web3Reducer = (state, action) => {
     if (action.type === "ACCOUNT") {
         return {
             account: action.account,
@@ -18,26 +18,26 @@ const web3Reducer = (state, action) => {
     if (action.type === "NETWORKID") {
         return {
             account: state.account,
-            networkId: action.networkId,
+            networkId: state.networkId,
         };
     }
-
     return defaultWeb3State;
 };
 
 const Web3Provider = (props) => {
     const [web3State, dispatchWeb3Action] = useReducer(
-        web3Reducer,
+        Web3Reducer,
         defaultWeb3State
     );
 
     const loadAccountHandler = async (web3) => {
         const accounts = await web3.eth.getAccounts();
+        console.log("FROM WEB3PROVIDER");
+        console.log(accounts);
         const account = accounts[0];
         dispatchWeb3Action({ type: "ACCOUNT", account: account });
         return account;
     };
-
     const loadNetworkIdHandler = async (web3) => {
         const networkId = await web3.eth.net.getId();
         dispatchWeb3Action({ type: "NETWORKID", networkId: networkId });

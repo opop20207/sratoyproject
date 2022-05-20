@@ -15,8 +15,50 @@ import MyCollectionItemSell from "./components/MyNFT/MyCollectionItemSell";
 import "antd/dist/antd.css";
 import MarketPlaceItemBuy from "./components/MarketPlace/MarketPlaceItemBuy";
 import MarketPlaceItemDetail from "./components/MarketPlace/MarketPlaceItemDetail";
+import Web3Context from "./providers/web3-context";
+import CollectionContext from "./providers/collection-context";
+import MarketplaceContext from "./providers/marketplace-context";
+import web3 from "./connection/web3";
+import { useContext, useEffect } from "react";
 
-function App() {
+import NFTCollection from "./abis/NFTCollection.json";
+import NFTMarketplace from "./abis/NFTMarketplace.json";
+
+const App = () => {
+    const web3Ctx = useContext(Web3Context);
+    const collectionCtx = useContext(CollectionContext);
+    const marketplaceCtx = useContext(MarketplaceContext);
+
+    useEffect(() => {
+        if (!web3) {
+            console.log("NO METAMASK ERROR");
+        }
+        const loadData = async () => {
+            const account = web3Ctx.loadAccount(web3);
+            const networkId = web3Ctx.loadNetworkId(web3);
+
+            console.log("FROM INIT", account, networkId);
+
+            if (!account) {
+                try {
+                    await window.ethereum.request({
+                        method: "eth_requestAccounts",
+                    });
+                    web3Ctx.loadAccount(web3);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            window.ethereum.on("accountsChanged", (accounts) => {
+                web3Ctx.loadAccount(web3);
+            });
+            const nftContract = await collectionCtx.loadContract();
+            await collectionCtx.loadCollection();
+            console.log(collectionCtx);
+        };
+        loadData();
+    }, []);
     return (
         <div className="App">
             <header className="App-header">
@@ -37,7 +79,7 @@ function App() {
                             element={<MarketPlaceItemBuy />}></Route>
 
                         <Route
-                            path="/LoginMeta" 
+                            path="/LoginMeta"
                             element={<LoginMeta />}></Route>
 
                         <Route path="/SellingNFT" element={<Selling />}></Route>
@@ -60,5 +102,5 @@ function App() {
             </header>
         </div>
     );
-}
+};
 export default App;

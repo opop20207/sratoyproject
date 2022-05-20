@@ -1,7 +1,11 @@
 import { ThemeProvider } from "react-bootstrap";
 import { useMoralis } from "react-moralis";
 import Web3 from "web3";
+import { useContext } from "react";
+import CollectionContext from "../../providers/collection-context";
+import MarketplaceContext from "../../providers/marketplace-context";
 import { useMoralisDapp } from "../../providers/MoralisDappProvider/MoralisDappProvider";
+import Web3Context from "../../providers/web3-context";
 import "../../static/css/Create.css";
 
 function CreateNft() {
@@ -9,6 +13,9 @@ function CreateNft() {
     const nft_contract_address = "0x3d05364012a5f131e3a32a68deba6c23041fb917"; //NFT Minting Contract Use This One "Batteries Included", code of this contract is in the github repository under contract_base for your reference.
     const web3 = new Web3(Web3.givenProvider);
     const { walletAddress } = useMoralisDapp();
+    const web3Ctx = useContext(Web3Context);
+    const collectionCtx = useContext(CollectionContext);
+    const marketplaceCtx = useContext(MarketplaceContext);
 
     async function upload() {
         const fileInput = document.getElementById("file");
@@ -33,7 +40,8 @@ function CreateNft() {
         await metadataFile.saveIPFS();
 
         const metadataURI = metadataFile.ipfs();
-        const tx = await mintToken(metadataURI);
+        const tx = await collectionCtx.mintToken(metadataURI);
+        console.log(tx);
 
         const savedData = new Moralis.Object("NFTs");
         savedData.set("name", document.getElementById("name").value);

@@ -1,10 +1,15 @@
 import { useMoralis } from "react-moralis";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Web3 from "web3";
 import { useMoralisDapp } from "../../providers/MoralisDappProvider/MoralisDappProvider";
 import MyCollectionItem from "./MyCollectionItem";
-
+import MarketplaceContext from "../../providers/marketplace-context";
+import CollectionContext from "../../providers/collection-context";
+import Web3Context from "../../providers/web3-context";
 function MyCollection() {
+    const web3Ctx = useContext(Web3Context);
+    const collectionCtx = useContext(CollectionContext);
+    const marketplaceCtx = useContext(MarketplaceContext);
     const { authenticate, Moralis, isAuthenticated, user, refetchUserData } =
         useMoralis();
     const [products, setproducts] = useState([]);
@@ -35,6 +40,7 @@ function MyCollection() {
             };
             dataFormedArray.push(dataFormed);
         }
+
         return dataFormedArray;
     }
 
