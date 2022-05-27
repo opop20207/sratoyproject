@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 
 import MarketplaceContext from "./marketplace-context";
+import Web3Context from "./web3-context";
+import web3 from "../connection/web3";
+import NFTMarketplace from "../abis/NFTMarketplace.json";
 
 const MarketplaceProvider = (props) => {
-    const [contract, setContract] = useState(null);
-    const [offers, setOffers] = useState([]);
+    let contract = null;
+    let offers = [];
 
-    useEffect((web3, NFTMarketplace, deployedNetwork) => {
-        const temp = deployedNetwork
-            ? new web3.eth.Contract(NFTMarketplace.abi, deployedNetwork.address)
-            : "";
-        setContract(temp);
-    });
+    const loadContract = async () => {
+        const temp = new web3.eth.Contract(
+            NFTMarketplace.abi,
+            nftContractAddress
+        );
+        contract = temp;
+        return temp;
+    };
 
     const loadOffer = async () => {
         if (!contract) {
@@ -43,7 +48,10 @@ const MarketplaceProvider = (props) => {
             console.log("Contract Not Loaded");
             return;
         }
+        const offerCount = await contract.methods.offerCount().call();
     };
+
+    const makeOffer = async (tokenID) => {};
 
     return (
         <MarketplaceContext.Provider>

@@ -7,8 +7,8 @@ import NFTCollection from "../abis/NFTCollection.json";
 
 const CollectionProvider = (props) => {
     //동기 처리 필요함
-    const [contract, setContract] = useState();
-    const [collection, setCollection] = useState([]);
+    let contract = null;
+    let collection = [];
     const web3Ctx = useContext(Web3Context);
     const nftContractAddress = "0xa3af175f9e44adce033a0e8fc949ab37a82fab2d";
 
@@ -17,11 +17,15 @@ const CollectionProvider = (props) => {
             NFTCollection.abi,
             nftContractAddress
         );
-        setContract(temp);
+        contract = temp;
         return temp;
     };
 
     const mintToken = async (tokenURI) => {
+        if (!contract) {
+            console.log("Contract Not Loaded");
+            return;
+        }
         const transactionParameters = {
             to: nftContractAddress,
             from: web3Ctx.account,
@@ -33,6 +37,10 @@ const CollectionProvider = (props) => {
     };
 
     const loadCollection = async () => {
+        if (!contract) {
+            console.log("Contract Not Loaded");
+            return;
+        }
         const totalSupply = await contract.methods.totalSupply().call();
         let temp = [];
         for (let i = 0; i < totalSupply; i++) {
@@ -62,7 +70,7 @@ const CollectionProvider = (props) => {
                 console.error("Wrong from loading collection");
             }
         }
-        setCollection(temp);
+        collection = temp;
         console.log(collection);
     };
 

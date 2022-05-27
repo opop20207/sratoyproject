@@ -5,6 +5,7 @@ const CollectionContext = React.createContext({
     collection: [],
     loadContract: () => {},
     loadCollection: () => {},
+    mintToken: () => {},
 });
 
 export default CollectionContext;

@@ -21,9 +21,7 @@ ReactDOMClient.createRoot(rootNode).render(
             <Web3Provider>
                 <CollectionProvider>
                     <MarketplaceProvider>
-                        <React.StrictMode>
-                            <App />
-                        </React.StrictMode>
+                        <App />
                     </MarketplaceProvider>
                 </CollectionProvider>
             </Web3Provider>
